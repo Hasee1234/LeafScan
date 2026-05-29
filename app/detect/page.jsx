@@ -61,14 +61,25 @@ const handleAnalyse = async () => {
 
     console.log("API RESPONSE:", data);
 
-    // ✅ STEP 1: clean backend output
-    const rawClass = data.class || "";
-    const cleanClass = rawClass.split("___").pop().toLowerCase();
+   // backend class
+const rawClass = (data.class || "").toLowerCase();
 
-    // ✅ STEP 2: better matching logic
-    const matched = diseases.find((d) =>
-      d.id.toLowerCase().includes(cleanClass)
-    );
+// normalize helper
+const normalize = (str) =>
+  str
+    .toLowerCase()
+    .replace(/__/g, "_")
+    .replace(/___/g, "_")
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_]/g, "");
+
+// normalized backend class
+const normalizedClass = normalize(rawClass);
+
+// find disease
+const matched = diseases.find(
+  (d) => normalize(d.id) === normalizedClass
+);
 
     if (matched) {
       setResult({
