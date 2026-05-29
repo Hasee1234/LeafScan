@@ -28,65 +28,88 @@ export default function DetectPage() {
     setError(null)
   }
 
-  const handleAnalyse = async () => {
-    if (!selectedFile) return
-    setLoading(true)
-    setError(null)
-    setResult(null)
-    setLoadingStep(0)
 
-    // Simulate loading steps
-    for (let i = 0; i < loadingSteps.length; i++) {
-      setLoadingStep(i)
-      await new Promise(r => setTimeout(r, 700))
-    }
+const handleAnalyse = async () => {
+  if (!selectedFile) return;
 
-    try {
-      const formData = new FormData()
-      formData.append('file', selectedFile)
+  setLoading(true);
+  setError(null);
+  setResult(null);
+  setLoadingStep(0);
 
-        const response = await fetch('https://leafscan-backend-lff1.onrender.com/predict', {
-          method: 'POST',
-          body: formData,
-      })
-
-      if (!response.ok) throw new Error('Prediction failed')
-
-      const data = await response.json()
-
-      // Match returned disease id to our diseases data
-      const matched = diseases.find(d => d.id === data.disease_id)
-
-      if (matched) {
-        setResult({ ...matched, confidence: data.confidence })
-      } else {
-        // Fallback: use raw data from API
-        setResult({
-          name: data.disease_name || 'Unknown Disease',
-          plant: data.plant || 'Unknown Plant',
-          plantIcon: '🌿',
-          scientificName: data.scientific_name || '—',
-          type: data.type || 'Unknown',
-          typeColor: '#6366f1',
-          severity: data.severity || 'Medium',
-          severityColor: '#f59e0b',
-          description: data.description || 'No description available.',
-          symptoms: data.symptoms || [],
-          causes: data.causes || [],
-          treatment: data.treatment || [],
-          prevention: data.prevention || [],
-          confidence: data.confidence || 0.5,
-        })
-      }
-    } catch (err) {
-      // Demo mode — show a sample result when backend not connected
-      const demo = diseases[Math.floor(Math.random() * diseases.length)]
-      setResult({ ...demo, confidence: 0.91 + Math.random() * 0.07 })
-      setError('demo')
-    } finally {
-      setLoading(false)
-    }
+  // loading animation
+  for (let i = 0; i < loadingSteps.length; i++) {
+    setLoadingStep(i);
+    await new Promise(r => setTimeout(r, 700));
   }
+
+  try {
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    const response = await fetch(
+      "https://leafscan-backend-lff1.onrender.com/predict",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) throw new Error("Prediction failed");
+
+    const data = await response.json();
+
+    console.log("API RESPONSE:", data);
+
+    // ✅ STEP 1: clean backend output
+    const rawClass = data.class || "";
+    const cleanClass = rawClass.split("___").pop().toLowerCase();
+
+    // ✅ STEP 2: better matching logic
+    const matched = diseases.find((d) =>
+      d.id.toLowerCase().includes(cleanClass)
+    );
+
+    if (matched) {
+      setResult({
+        ...matched,
+        confidence: data.confidence,
+      });
+    } else {
+      // fallback (only if mismatch)
+      setResult({
+        name: rawClass,
+        plant: "Unknown Plant",
+        plantIcon: "🌿",
+        scientificName: "—",
+        type: "Unknown",
+        typeColor: "#6366f1",
+        severity: "Medium",
+        severityColor: "#f59e0b",
+        description: "Model prediction received but not mapped to UI data.",
+        symptoms: [],
+        causes: [],
+        treatment: [],
+        prevention: [],
+        confidence: data.confidence || 0.5,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+
+    const demo =
+      diseases[Math.floor(Math.random() * diseases.length)];
+
+    setResult({
+      ...demo,
+      confidence: 0.9 + Math.random() * 0.08,
+    });
+
+    setError("demo");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleReset = () => {
     setSelectedFile(null)
