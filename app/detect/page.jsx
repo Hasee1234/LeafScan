@@ -45,9 +45,9 @@ export default function DetectPage() {
       const formData = new FormData()
       formData.append('file', selectedFile)
 
-      const response = await fetch('http://localhost:8000/predict', {
-        method: 'POST',
-        body: formData,
+        const response = await fetch('https://leafscan-backend-lff1.onrender.com/predict', {
+          method: 'POST',
+          body: formData,
       })
 
       if (!response.ok) throw new Error('Prediction failed')
