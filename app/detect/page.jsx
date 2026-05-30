@@ -65,21 +65,37 @@ const handleAnalyse = async () => {
 const rawClass = (data.class || "").toLowerCase();
 
 // normalize helper
-const normalize = (str) =>
-  str
-    .toLowerCase()
-    .replace(/__/g, "_")
-    .replace(/___/g, "_")
-    .replace(/\s+/g, "_")
-    .replace(/[^a-z0-9_]/g, "");
+const CLASS_TO_ID = {
+  'tomato___bacterial_spot':                        'tomato-bacterial-spot',
+  'tomato___early_blight':                          'tomato-early-blight',
+  'tomato___late_blight':                           'tomato-late-blight',
+  'tomato___leaf_mold':                             'tomato-leaf-mold',
+  'tomato___septoria_leaf_spot':                    'tomato-early-blight',
+  'tomato___spider_mites two-spotted_spider_mite':  'tomato-early-blight',
+  'tomato___target_spot':                           'tomato-early-blight',
+  'tomato___tomato_mosaic_virus':                   'tomato-mosaic-virus',
+  'tomato___tomato_yellow_leaf_curl_virus':         'tomato-mosaic-virus',
+  'potato___early_blight':                          'potato-early-blight',
+  'potato___late_blight':                           'potato-late-blight',
+  'apple___apple_scab':                             'apple-scab',
+  'apple___black_rot':                              'apple-scab',
+  'apple___cedar_apple_rust':                       'apple-scab',
+  'grape___black_rot':                              'grape-black-rot',
+  'grape___esca_(black_measles)':                   'grape-black-rot',
+  'grape___leaf_blight_(isariopsis_leaf_spot)':     'grape-black-rot',
+  'strawberry___leaf_scorch':                       'strawberry-leaf-scorch',
+  'corn___cercospora_leaf_spot gray_leaf_spot':     'corn-common-rust',
+  'corn___common_rust':                             'corn-common-rust',
+  'corn___northern_leaf_blight':                    'corn-common-rust',
+  'peach___bacterial_spot':                         'tomato-bacterial-spot',
+  'pepper,_bell___bacterial_spot':                  'tomato-bacterial-spot',
+  'orange___haunglongbing_(citrus_greening)':       'tomato-mosaic-virus',
+  'squash___powdery_mildew':                        'rose-powdery-mildew',
+  'cherry___powdery_mildew':                        'rose-powdery-mildew',
+}
 
-// normalized backend class
-const normalizedClass = normalize(rawClass);
-
-// find disease
-const matched = diseases.find(
-  (d) => normalize(d.id) === normalizedClass
-);
+const diseaseId = CLASS_TO_ID[rawClass]
+const matched   = diseaseId ? diseases.find(d => d.id === diseaseId) : null
 
     if (matched) {
       setResult({
@@ -87,23 +103,25 @@ const matched = diseases.find(
         confidence: data.confidence,
       });
     } else {
-      // fallback (only if mismatch)
-      setResult({
-        name: rawClass,
-        plant: "Unknown Plant",
-        plantIcon: "🌿",
-        scientificName: "—",
-        type: "Unknown",
-        typeColor: "#6366f1",
-        severity: "Medium",
-        severityColor: "#f59e0b",
-        description: "Model prediction received but not mapped to UI data.",
-        symptoms: [],
-        causes: [],
-        treatment: [],
-        prevention: [],
-        confidence: data.confidence || 0.5,
-      });
+  const [plantPart, ...diseaseParts] = rawClass.split('___')
+  const plantName   = diseaseParts.length ? plantPart.replace(/_/g,' ').replace(/,/g,'').trim() : 'Unknown'
+  const diseaseName = diseaseParts.join(' ').replace(/_/g,' ').trim() || rawClass
+  setResult({
+    name: diseaseName.charAt(0).toUpperCase() + diseaseName.slice(1),
+    plant: plantName.charAt(0).toUpperCase() + plantName.slice(1),
+    plantIcon: '🌿',
+    scientificName: '—',
+    type: rawClass.includes('virus') ? 'Viral' : rawClass.includes('bacterial') ? 'Bacterial' : 'Fungal',
+    typeColor: rawClass.includes('virus') ? '#6366f1' : rawClass.includes('bacterial') ? '#f59e0b' : '#8b5cf6',
+    severity: rawClass.includes('late') || rawClass.includes('rot') ? 'High' : 'Medium',
+    severityColor: rawClass.includes('late') || rawClass.includes('rot') ? '#ef4444' : '#f59e0b',
+    description: `LeafScan detected ${diseaseName} on your ${plantName}. General guidance is shown below.`,
+    symptoms: ['Leaf discoloration or irregular spotting','Reduced plant vigor and growth','Visible pathogen growth on leaves or fruit','Premature leaf drop in severe cases'],
+    causes: ['Pathogen infection','Warm, humid or wet conditions favouring disease spread','Poor airflow or infected plant debris nearby'],
+    treatment: ['Remove infected tissue and sanitize tools immediately','Improve airflow and reduce moisture around the plant','Apply appropriate fungicide or bactericide as recommended by a specialist'],
+    prevention: ['Monitor plants regularly for early symptoms','Practice good sanitation and plant spacing','Avoid overhead watering; remove infected debris promptly'],
+    confidence: data.confidence || 0.5,
+  })
     }
   } catch (err) {
     console.log(err);
