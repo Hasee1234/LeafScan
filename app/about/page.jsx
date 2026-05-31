@@ -439,7 +439,7 @@ export default function AboutPage() {
                     {[
                       { icon: '🎓', text: 'University of Agriculture, Faisalabad' },
                       { icon: '👨‍🏫', text: 'Supervisor: Dr. Imran Mumtaz' },
-                      { icon: '📅', text: 'Final Year Project 2024–25' },
+                      { icon: '📅', text: 'Final Year Project 2025–26' },
                     ].map((info, i) => (
                       <div key={i} style={{
                         display: 'flex', alignItems: 'center', gap: '6px',

@@ -150,7 +150,7 @@ const matched   = diseaseId ? diseases.find(d => d.id === diseaseId) : null
   return (
     <>
       <Navbar />
-      <main style={{ minHeight: '100vh', background: 'var(--cream)', paddingBottom: '80px' }}>
+      <main style={{ minHeight: '100vh', background: 'var(--cream)', paddingBottom: '80px', overflowX: 'hidden' }}>
 
         {/* ── Page Header ── */}
         <div style={{
@@ -218,12 +218,14 @@ const matched   = diseaseId ? diseases.find(d => d.id === diseaseId) : null
 
         {/* ── Main Content ── */}
         <div style={{
-          maxWidth: '1100px',
-          margin: '-40px auto 0',
-          padding: '0 24px',
-          position: 'relative',
-          zIndex: 2,
-        }}>
+  maxWidth: '1100px',
+  margin: '-40px auto 0',
+  padding: '0 16px',
+  position: 'relative',
+  zIndex: 2,
+  width: '100%',
+  boxSizing: 'border-box',
+}}>
 
           {/* Demo mode banner */}
           {error === 'demo' && (
@@ -255,12 +257,13 @@ const matched   = diseaseId ? diseases.find(d => d.id === diseaseId) : null
             {/* ── Left Panel — Upload ── */}
             <div>
               <div style={{
-                background: 'var(--white)',
-                borderRadius: '24px',
-                padding: '32px',
-                border: '1px solid var(--border)',
-                boxShadow: '0 8px 32px rgba(26,61,43,0.08)',
-              }}>
+  background: 'var(--white)',
+  borderRadius: '24px',
+  padding: '24px',
+  border: '1px solid var(--border)',
+  boxShadow: '0 8px 32px rgba(26,61,43,0.08)',
+  overflow: 'hidden',
+}}>
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: '10px',
                   marginBottom: '24px',
@@ -488,15 +491,15 @@ const matched   = diseaseId ? diseases.find(d => d.id === diseaseId) : null
 
           {/* ── Bottom info strip ── */}
           {!result && !loading && (
-            <div style={{
-              marginTop: '48px',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '16px',
-            }}>
+            <div className="info-strip" style={{
+  marginTop: '48px',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: '16px',
+}}>
               {[
                 { icon: '🌍', title: 'Any Plant Species', desc: 'Roses, fruit trees, houseplants and more' },
-                { icon: '⚡', title: 'Results in 2 Seconds', desc: 'Fast AI-powered analysis' },
+                { icon: '⚡', title: 'Results in Seconds', desc: 'Fast AI-powered analysis' },
                 { icon: '💊', title: 'Full Treatment Plan', desc: 'Cure and prevention steps included' },
                 { icon: '🔒', title: 'Privacy Safe', desc: 'Images are never stored' },
               ].map((item, i) => (

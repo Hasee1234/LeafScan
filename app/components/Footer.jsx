@@ -165,7 +165,7 @@ export default function Footer() {
               {[
                 { label: 'Tomato', icon: '🍅', diseases: '9 diseases' },
                 { label: 'Potato', icon: '🥔', diseases: '3 diseases' },
-                { label: 'Pepper', icon: '🫑', diseases: '2 diseases' },
+                { label: 'Pepper', icon: '🌶️', diseases: '2 diseases' },
               ].map(crop => (
                 <div key={crop.label} style={{
                   display: 'flex',

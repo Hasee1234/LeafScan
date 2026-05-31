@@ -639,7 +639,7 @@ export const diseases = [
   {
     id: 'blueberry-healthy',
     plant: 'Blueberry',
-    plantIcon: '🫐',
+    plantIcon: '🍇',
     name: 'Healthy Blueberry',
     scientificName: 'Vaccinium corymbosum',
     type: 'Healthy',
@@ -1036,7 +1036,7 @@ export const diseases = [
   {
     id: 'pepper-bacterial-spot',
     plant: 'Pepper',
-    plantIcon: '🫑',
+    plantIcon: '🌶️',
     name: 'Bacterial Spot',
     scientificName: 'Xanthomonas campestris',
     type: 'Bacterial',
@@ -1070,7 +1070,7 @@ export const diseases = [
   {
     id: 'pepper-healthy',
     plant: 'Pepper',
-    plantIcon: '🫑',
+    plantIcon: '🌶️',
     name: 'Healthy Pepper',
     scientificName: 'Capsicum annuum',
     type: 'Healthy',
@@ -1173,7 +1173,7 @@ export const diseases = [
   {
     id: 'raspberry-healthy',
     plant: 'Raspberry',
-    plantIcon: '🫐',
+    plantIcon: '🍓',
     name: 'Healthy Raspberry',
     scientificName: 'Rubus idaeus',
     type: 'Healthy',
