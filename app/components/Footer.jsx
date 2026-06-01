@@ -203,7 +203,7 @@ export default function Footer() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {[
                 'Next.js', 'Tailwind CSS', 'FastAPI',
-                'TensorFlow', 'EfficientNetB0', 'OpenCV',
+                'TensorFlow', 'EfficientNetB0', 'Pillow(PIL)',
               ].map(tech => (
                 <span key={tech} style={{
                   padding: '5px 12px',

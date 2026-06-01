@@ -252,7 +252,7 @@ export default function AboutPage() {
                   category: 'Image Processing',
                   icon: '🔬',
                   color: '#dcfce7',
-                  items: ['OpenCV', 'NumPy', 'PIL / Pillow'],
+                  items: ['NumPy', 'PIL / Pillow','Image Augmentation'],
                 },
                 {
                   category: 'Dataset',
